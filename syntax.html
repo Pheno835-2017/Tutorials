@@ -1,0 +1,523 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Notes on Madgraph syntax and examples
+for NIU PHYS 474/790</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta content="MSHTML 5.50.4616.200" name="GENERATOR"></head>
+<body>
+<font color="#ff0000"><h2 align="center">Notes on Madgraph syntax and 
+examples
+for NIU PHYS 474/790
+</h2></font>
+You can find these notes online at 
+<a href="http://www.niu.edu/spmartin/madgraph/madsyntax.html">
+http://www.niu.edu/spmartin/madgraph/madsyntax.html</a>. 
+You can also review how to start Madgraph at 
+<a href="http://www.niu.edu/spmartin/madgraph">
+http://www.niu.edu/spmartin/madgraph</a>,
+and notes on the tutorial are here: 
+<a href="http://www.niu.edu/spmartin/madgraph/madtutor.html">
+http://www.niu.edu/spmartin/madgraph/madtutor.html</a>
+.
+
+<p>
+
+<font color="#ff0000"><h3>
+Adding another process
+</h3></font>
+
+Often, one wants to combine more than one process in the same event 
+sample. For example, you can do combined top and bottom production:
+<p>
+
+<ul><font color="#0000ff">
+  generate p p > t t~
+<br>
+  add process p p > b b~ 
+</ul><font color="#000000">
+
+Note that if you do another "generate", it will just overwrite the first 
+generate. That's why you have to do "add process" instead.
+
+<p>
+
+Now you can output the resulting combined processes:
+<ul><font color="#0000ff">
+  output MY_SECOND_RUN
+</ul><font color="#000000">
+and launch:
+<ul><font color="#0000ff">
+  launch MY_SECOND_RUN
+</ul><font color="#000000">
+<p>
+The resulting events generated will be correctly weighted according to 
+their individual cross-sections.
+
+This time we will only be interested in the cross-sections, and not
+want to look at plots of kinematic variables. So we won't run Pythia, or 
+either of the detector 
+simulators. So when Madgraph asks what switches you want to turn on, 
+you say
+<ul><font color="#0000ff">
+  0
+</ul><font color="#000000">
+which means none. Madgraph will now give you the option of editing the 
+parameter card, the run card, or the plot card. We'll just be looking at 
+the total cross-section, so we just need a very quick run. So let's edit 
+the run card to only ask for 1000 events. Type
+<ul><font color="#0000ff">
+  2
+</ul><font color="#000000">
+and then change "10000" to "1000" on line 32. Save the file, and then
+type 
+<ul><font color="#0000ff">
+  0
+</ul><font color="#000000">
+to start the run.
+<p>
+When Madgraph is finished, you should see that the cross-section is 
+something like 4.41e+08 pb, which is huge!  To see the individual 
+contributions, you can type:
+<ul><font color="#0000ff">
+  open index.html
+</ul><font color="#000000">
+and click on "Results and Event Database". If you click on the 
+cross-section number link, it will bring up a page that lists all of the 
+individual partonic subprocesses, and how much they contributed. You can 
+see that almost all of the cross-section is due to gluon+gluon > 
+bottom+antibottom.
+<p>
+
+<font color="#ff0000"><h3>
+Putting cuts at generator level
+</h3></font>
+
+<p>
+Part of the reason the huge bottom+antibottom cross-section happened is 
+because of very "soft" (low-pT) bottom
+quarks, and from soft gluons splitting into bottom-antibottom pairs. 
+In many cases, you will not be interested in such events anyway, and they 
+will be cut out later at the analysis stage. To 
+avoid them, go back to the Madgraph interactive terminal 
+window and type 
+<ul><font color="#0000ff">
+  launch MY_SECOND_RUN
+</ul><font color="#000000">
+again. Again, type:
+<ul><font color="#0000ff">
+  0
+<br>
+  2
+</ul><font color="#000000">
+But this time, we will further edit the run card. On line 106, you will 
+see:
+<br>
+0 = ptb
+<br>
+which means that no cut is being imposed on the transverse momentum of the 
+bottom or the antibottom. Change this to:
+<br>
+25 = ptb
+<br>
+so that we are imposing a generator-level cut that the transverse 
+momentum of each bottom or antibottom parton has to be at least 25 
+GeV.
+Further down, you will see on line 132: 
+<br>
+  -1  = etab 
+<br>
+Change this to:
+<br>
+  5  = etab 
+<br>
+so that |eta| has to be at most 5, in other words not too close to the 
+beampipe.
+Finally, a little further down, on line 144, change:
+<br>
+0   = drbb
+<br>
+to
+<br>
+0.4   = drbb
+<br>
+to impose a cut that deltaR has to be at least 0.4 for the 
+bottom-antibottom pair, so that they can be clearly 
+distinguished in the detector. 
+These cuts are somewhat redundant with each other, but give 
+us a chance to 
+see how to implement them. 
+Now save and quit from the editor, and type
+<ul><font color="#0000ff">
+  0
+</ul><font color="#000000">
+to start the run.
+<p>
+This time, you should see a cross-section of something like 1.34e+06 pb,
+so more than a factor of 300 smaller. It is still dominated by 
+the bottom-antibottom process, simply because the bottom quark is so mugh 
+lighter than the top quark.
+
+<p>
+The cuts we have put in above are at "generator level". Their main purpose 
+is to avoid having Madgraph waste time generating events that we are just 
+going to cut later anyway. 
+You can impose similar cuts on ordinary (non-b) jets,
+leptons, and photons, by making similar edits in the run_card.dat.
+Cuts can also be imposed after the events have 
+passed through the detector simulator, which is how they would be imposed 
+on real data.
+
+<p>
+<font color="#ff0000"><h3>
+Multiparticles
+</h3></font>
+<p>
+
+In principle, you can add as many processes as you want,
+say like:
+<ul><font color="#0000ff">
+  generate p p > u u~
+<br>
+  add process p p > d d~ 
+<br>
+  add process p p > s s~ 
+<br>
+  add process p p > c c~ 
+<br>
+  add process p p > g g~ 
+</ul><font color="#000000">
+all of which would produce events with two jets. However, this can get 
+tedious, so it is better to use multiparticles, a built-in Madgraph features.
+
+<p>
+
+You may have noticed that when you started up Madgraph, it said something 
+like:
+<p>
+"Defined multiparticle p = g u c d s u~ c~ d~ s~
+<br>
+Defined multiparticle j = g u c d s u~ c~ d~ s~
+<br>
+Defined multiparticle l+ = e+ mu+
+<br>
+Defined multiparticle l- = e- mu-
+<br>
+Defined multiparticle vl = ve vm vt
+<br>
+Defined multiparticle vl~ = ve~ vm~ vt~
+<br>
+Defined multiparticle all = g u c d s u~ c~ d~ s~ a ve vm vt e- mu- ve~ 
+vm~ vt~ e+ mu+ t b t~ b~ z w+ h w- ta- ta+"
+<p>
+The multiparticle "p" is the proton, which we've already used.
+The jet multiparticle "j" means to sum over all of the same gluon, quark, 
+and antiquark partons, but in the final state.
+The multiparticle "l-" means to sum over electrons and muons, and the
+multiparticle "l+" means to sum over their antiparticles.
+The multiparticles "vl" and "vl~" are for all neutrinos and 
+anti-neutrinos.
+
+You can also define your own multiparticles for convenience, for example:
+<ul><font color="#0000ff">
+  define k = g u u~ c c~ d d~ s s~ b b~
+</ul><font color="#000000">
+would define a multiparticle similar to j, but that also includes bottom and 
+antibottom. 
+
+<p>
+
+So you can do things like:
+<ul><font color="#0000ff">
+  generate p p > j j
+</ul><font color="#000000">
+which will generate the same thing as the previous combination.
+You can also generate all 3-jets events, like this:
+<ul><font color="#0000ff">
+  generate p p > j j j
+</ul><font color="#000000">
+etc. When you get up to 4 or 5 or more jets, Madgraph can take a 
+very long 
+time 
+to run.
+
+<p>
+<font color="#ff0000"><h3>
+Jet matching
+</h3></font>
+<p>
+
+However, there is a tricky point here. If you do this:
+<ul><font color="#0000ff">
+  generate p p > j j 
+<br>
+  add process p p > j j j
+</ul><font color="#000000">
+you will actually be double-counting events. This is because when Pythia 
+does the parton shower and hadronization of the 2-jet final state, it will 
+automatically produce some additional jets, which would be 
+partially redundant with the 3-jet events. To avoid this is an advanced 
+topic; you need to "match" the two samples. If you need to become an 
+expert on this, start at these links:
+<br>
+<a href="https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/IntroMatching">
+https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/IntroMatching
+</a>
+<br>
+<a href="https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/Matching">
+https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/Matching
+</a>
+<p>
+
+The same issue arises, for example, in top quark production. This is fine:
+<ul><font color="#0000ff">
+  generate p p > t t~ j
+</ul><font color="#000000">
+(usually with a cut on the pT of the extra jet, imposed in the 
+run_card.dat 
+file) but doing this:
+<ul><font color="#0000ff">
+  generate p p > t t~ 
+<br>
+  add process p p > t t~ j
+</ul><font color="#000000">
+requires that you understand the jet matching procedure to avoid 
+double-counting.
+<p>
+
+
+<p>
+<font color="#ff0000"><h3>
+How to put restrictions on decays
+</h3></font>
+<p>
+
+Sometimes you might be interested in only a subset of events with special 
+properties, like events that have leptons in them. Here's an example. 
+Suppose you want to produce a W boson at the LHC. The command 
+would be:
+<ul><font color="#0000ff">
+  generate p p > W+ 
+</ul><font color="#000000">
+But perhaps you only care about the subset of events 
+where the W boson decays to an antimuon and a muon neutrino. 
+The command would be:
+<ul><font color="#0000ff">
+  generate p p > W+, W+ > mu+ vm
+</ul><font color="#000000">
+This tells Madgraph that it should only produce, and only calculate the 
+cross-section for, events in which the W decays to a muon. 
+You can also use multiparticles with this syntax (but only for the final 
+particle in the decay, not the decaying particles). So, for example,
+you could generate events where a W is produced with a jet, and then the 
+jet decays to a lepton:
+<ul><font color="#0000ff">
+  generate p p > W+ j, W+ > l+ vl
+</ul><font color="#000000">
+This sort of thing is useful because the decays to 
+jets have huge backgrounds compared to the decays to leptons. You don't 
+want to have Madgraph 
+waste time producing a bunch of events that you are just 
+going to ignore 
+anyway. 
+
+<p>
+
+Here's a more complicated example involving a decay chain:
+<ul><font color="#0000ff">
+generate p p > t t~, (t > W+ b, W+ > j j), (t~ > W- b~, W- > l- vl~)
+</ul><font color="#000000">
+This tells Madgraph to produce a top+antitop pair, but only keep events 
+where the top decays to 
+a W and a bottom (which it almost always does anyway), and where the 
+antitop decays to a W and a bottom  with the W decaying leptonically.
+
+<p>
+
+We'll do another example later when we discuss the Higgs decay to two photons.
+In general, the restrictions on decays are most useful when the decays 
+involved are both important to the signal you are trying 
+to observe and relatively rare.
+
+<p>
+<font color="#ff0000"><h3>
+How to require the presence or absence of particles in Feynman diagrams
+</h3></font>
+<p>
+
+Sometimes you might want to exclude Feynman diagrams that contain 
+a particular particle. For example, suppose you wanted to generate
+a sample of electron + positron production, but you wanted to 
+exclude any Feynman diagrams that contain a Z boson. You could do this by:
+<ul><font color="#0000ff">
+generate p p > e+ e- / Z
+</ul><font color="#000000">
+The "/ Z" means to exclude a Feynman diagram if it has a 
+Z boson in it.
+
+You can also exclude a particle from appearing in the s-channel, by
+<ul><font color="#0000ff">
+generate p p > e+ e- $ Z                                          
+</ul><font color="#000000">
+
+Finally, you can include only those Feynman diagrams in which a 
+certain particle 
+is present in the s-channel, 
+for example by
+<ul><font color="#0000ff">
+generate p p > Z > e+ e-                                          
+</ul><font color="#000000">
+
+Each of these should be used with care, because they can result in 
+violating gauge invariance or unitarity if you aren't careful. 
+
+<p>
+
+Other examples of Madgraph syntax can be found here:
+<br><a 
+href="https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/InputEx">
+https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/InputEx
+</a>
+<br><a 
+href="https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/FAQ-General-6">
+https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/FAQ-General-6
+</a>
+<br><a 
+href="https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/FAQ-General-10">
+https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/FAQ-General-10
+</a>
+<br><a 
+href="http://madgraph.phys.ucl.ac.be//EXAMPLES/proc_card_examples.html">
+http://madgraph.phys.ucl.ac.be//EXAMPLES/proc_card_examples.html
+</a>
+<br>
+Beware of Madgraph 4 syntax; it often doesn't work in Madgraph 5.
+
+
+<p>
+<font color="#ff0000"><h3>
+Importing new models
+</h3></font>
+<p>
+One of the main uses of Madgraph is to study hypothetical particles that 
+can exist in theories like supersymmetry, which is an extension of the 
+Standard Model. It has a bunch of new particles, with new interactions.
+To include them, you need to import the information about the model into 
+Madgraph. Madgraph comes with several different versions of supersymmetry,
+including mssm (the Minimal Supersymmetric Standard Model). If you want to
+do something with supersymmetry, first make your own copy of the model
+directory that contains all of the particle mass and coupling information.
+Before starting Madgraph, you would do this:
+
+<ul><font color="#0000ff">
+cd /xdata/$USER/madgraph/models                                           
+<br>
+cp -rfvp mssm mssm_$USER
+<br>
+cd /xdata/$USER/madgraph                                           
+</ul><font color="#000000">
+
+<p>
+
+Now when you start Madgraph, you can do:
+<ul><font color="#0000ff">
+import model mssm_$USER
+</ul><font color="#000000">
+This replaces the default model ("sm", the Standard Model).
+
+<p>
+
+In supersymmetry, there is a particle called the gluino, with symbol "go".
+So, for example, to simulate the production of a pair of gluinos, you would do:
+<ul><font color="#0000ff">
+generate p p > go go
+</ul><font color="#000000">
+There are a lot of other particles in the mssm too. To use this model, you 
+would want to be able to change the masses of the supersymmetric 
+particles. (The default for the gluino mass, for example, is set at 607 
+GeV, which is ruled out now.) Unfortunately, at the moment this seems to 
+require registration at the Madgraph web site to use a tool they have 
+online for producing a parameter_card.dat for this model. You can also
+modify the default parameter_card.dat file by hand, but this is tricky and 
+dangerous.
+
+<p>
+
+<font color="#ff0000"><h3>
+Choosing your plots
+</h3></font>
+<p>
+
+By default, Madgraph produces a lot of plots that may not be very 
+interesting. Conversely, it may not produce some plots that you might 
+want, or it might produce them with axes that don't have the appropriate 
+scale, or histogram bin sizes that are too large or too small. You can 
+modify the plot_card.dat to customize the plots.
+Here's an example.
+
+<p>
+
+Let's do muon + antimuon production at the LHC. We would start with:
+<ul><font color="#0000ff">
+generate p p > mu+ mu-
+<br>
+output MUON_PROD
+<br>
+launch MUON_PROD
+</ul><font color="#000000">
+We will want to see the plots of the invariant mass of the mu+ mu- pair
+first at parton level, and then from Delphes at detector level.
+So we select switches according to:
+<ul><font color="#0000ff">
+1
+<br>
+3
+<br>
+0
+</ul><font color="#000000">
+Now select
+<ul><font color="#0000ff">
+9
+</ul><font color="#000000">
+to edit the plot card. This will allow us to choose what plots we want.
+There are some instructions inside the file. 
+In this case, we want to add a new 
+"class" of particles for the muons. After line 83, insert a new line:
+<p>
+mu 13 -13                #Class number 3
+<p>
+Here, 13 and -13 are the Particle Data Group codes for a muon and antimuon
+respectively.
+<p>
+Now, starting on line 128 is the list of plots that Madgraph will produce.
+In this example, we don't care about any of them; we only want to make a 
+plot of the invariant mass of the muon+antimuon pair. So, delete all of
+the lines between "Begin PlotDefs" and "End PlotDefs". In their place, put 
+just one line that reads
+<p>
+mij 3 2
+<p>
+This tells Madgraph that we want to plot the invariant masses of all pairs
+in class 3 (muons), up to the first 2 (ordered by pT). 
+<p>
+Finally, you will see lines sandwiched between "Begin PlotRange" and 
+"End PlotRange". Change the mij entry to read
+<p>
+mij       4   0  200
+<p>
+This means that we want histogram bins that are 4 GeV wide, and we want 
+the axis to go from 0 to 200 GeV.
+Now, save the file and exit, and start the run. When done, inspect the 
+invariant mass plot. You should be able to pick out the Z boson mass peak.
+Here's what it looks like at parton level (Madevent output):
+<p>
+<img alt="picture" src="madgraph_mumu_M_parton.jpg"
+border="0" WIDTH="400">
+<p>
+and here's what it looks like after the events have been through the 
+detector simulator Delphes: 
+<p>
+<img alt="picture" src="madgraph_mumu_M_delphes.jpg"
+border="0" WIDTH="400">
+<p>
+
+Next: <a href="madhiggs.html">A look at Higgs production.</a>
+</html>

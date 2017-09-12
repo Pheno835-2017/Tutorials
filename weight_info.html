@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en" dir="ltr">
+  <head>
+<base href="https://answers.launchpad.net/mg5amcnlo/+faq/1942/+index" />
+
+    <meta charset="UTF-8" />
+    <title>FAQ #1942 : Questions : MadGraph5_aMC@NLO</title>
+    <link rel="shortcut icon" href="/@@/launchpad.png" />
+    
+    
+    
+
+    
+  
+  <link type="text/css" rel="stylesheet"
+        media="screen, print"
+        href="/+icing/rev18449/combo.css" />
+
+
+    
+
+    
+      
+    
+
+    
+  
+
+  
+  
+  <script type="text/javascript">
+    var LP = {
+        cache: {},
+        links: {}
+    };
+  </script>
+
+  
+
+  <script type="text/javascript">var cookie_scope = '; Path=/; Secure; Domain=.launchpad.net';</script>
+
+   <script type="text/javascript"
+           src="/+combo/rev18449/?yui/yui/yui-min.js&amp;lp/meta.js&amp;yui/loader/loader-min.js"></script>
+   <script type="text/javascript">
+        var raw = null;
+        if (LP.devmode) {
+           raw = 'raw';
+        }
+        YUI.GlobalConfig = {
+            combine: true,
+            comboBase: '/+combo/rev18449/?',
+            root: 'yui/',
+            filter: raw,
+            debug: false,
+            fetchCSS: false,
+            maxURLLength: 2000,
+            groups: {
+                lp: {
+                    combine: true,
+                    base: '/+combo/rev18449/?lp/',
+                    comboBase: '/+combo/rev18449/?',
+                    root: 'lp/',
+                    // comes from including lp/meta.js
+                    modules: LP_MODULES,
+                    fetchCSS: false
+                }
+            }
+        }</script>
+
+  <script type="text/javascript">
+      // we need this to create a single YUI instance all events and code
+      // talks across. All instances of YUI().use should be based off of
+      // LPJS instead.
+      var LPJS = new YUI();
+  </script>
+
+
+
+    <script id="base-layout-load-scripts" type="text/javascript">
+        //<![CDATA[
+        LPJS.use('base', 'node', 'console', 'event',
+            'oop', 'lp', 'lp.app.foldables','lp.app.sorttable',
+            'lp.app.inlinehelp', 'lp.app.links', 'lp.app.longpoll',
+            'lp.bugs.bugtask_index', 'lp.bugs.subscribers',
+            'lp.app.ellipsis', 'lp.code.branchmergeproposal.diff',
+            'lp.views.global',
+             function(Y) {
+
+            Y.on("domready", function () {
+                var global_view = new Y.lp.views.Global();
+                global_view.render();
+
+                Y.lp.app.sorttable.SortTable.init();
+                Y.lp.app.inlinehelp.init_help();
+                Y.lp.activate_collapsibles();
+                Y.lp.app.foldables.activate();
+                Y.lp.app.links.check_valid_lp_links();
+                // Longpolling will only start if
+                // LP.cache.longpoll is populated.
+                // We use Y.later to work around a Safari/Chrome 'feature':
+                // The mouse cursor stays 'busy' until all the requests started during
+                // page load are finished.  Hence we want the long poll request to start
+                // right *after* the page has loaded.
+                Y.later(0, Y.lp.app.longpoll, Y.lp.app.longpoll.setupLongPollManager);
+
+            });
+
+            Y.on('lp:context:web_link:changed', function(e) {
+                  window.location = e.new_value;
+            });
+        });
+        //]]>
+    </script>
+    <script id="base-helper-functions" type="text/javascript">
+         //<![CDATA[
+        // This code is pulled from lp.js that needs to be available on every
+        // request. Pulling here to get it outside the scope of the YUI block.
+        function setFocusByName(name) {
+            // Focus the first element matching the given name which can be focused.
+            var nodes = document.getElementsByName(name);
+            var i, node;
+            for (i = 0; i < nodes.length; i++) {
+                node = nodes[i];
+                if (node.focus) {
+                    try {
+                        // Trying to focus a hidden element throws an error in IE8.
+                        if (node.offsetHeight !== 0) {
+                            node.focus();
+                        }
+                    } catch (e) {
+                        LPJS.use('console', function(Y) {
+                            Y.log('In setFocusByName(<' +
+                                node.tagName + ' type=' + node.type + '>): ' + e);
+                        });
+                    }
+                    break;
+                }
+            }
+        }
+
+        function selectWidget(widget_name, event) {
+          if (event && (event.keyCode === 9 || event.keyCode === 13)) {
+              // Avoid firing if user is tabbing through or simply pressing
+              // enter to submit the form.
+              return;
+          }
+          document.getElementById(widget_name).checked = true;
+        }
+        //]]>
+    </script>
+
+    
+      
+    
+  </head>
+
+  <body id="document" itemscope=""
+        itemtype="http://schema.org/WebPage"
+        class="tab-answers
+      main_side
+      public
+      yui3-skin-sam">
+          
+          
+    <div class="yui-d0">
+      <div id="locationbar" class="login-logout">
+        
+
+<div id="logincontrol"><a href="https://answers.launchpad.net/mg5amcnlo/+faq/1942/+login">Log in / Register</a></div>
+
+
+
+      </div><!--id="locationbar"-->
+
+      <div id="watermark" class="watermark-apps-portlet">
+        <div>
+          <a href="https://launchpad.net/mg5amcnlo"><img alt="" width="64" height="64" src="https://launchpadlibrarian.net/121184783/64_2.jpg" /></a>
+        </div>
+        <div class="wide">
+          <h2 id="watermark-heading"><a href="https://launchpad.net/mg5amcnlo">MadGraph5_aMC@NLO</a></h2>
+        </div>
+        
+  <!-- Application Menu -->
+  <ul class="facetmenu">
+    
+      
+      <li class="overview"><a
+    href="https://launchpad.net/mg5amcnlo">Overview</a></li>
+      
+    
+    
+      
+      <li class="branches"><a
+    href="https://code.launchpad.net/mg5amcnlo">Code</a></li>
+      
+    
+    
+      
+      <li class="bugs"><a href="https://bugs.launchpad.net/mg5amcnlo">Bugs</a></li>
+      
+    
+    
+      
+      <li class="specifications"><a
+    href="https://blueprints.launchpad.net/mg5amcnlo">Blueprints</a></li>
+      
+    
+    
+      
+      <li class="translations"><a
+    href="https://translations.launchpad.net/mg5amcnlo">Translations</a></li>
+      
+    
+    
+      <li class="answers active"><a
+    href="https://answers.launchpad.net/mg5amcnlo">Answers</a></li>
+      
+      
+    
+  </ul>
+
+      </div>
+
+      <div class="yui-t4">
+        <div id="maincontent" class="yui-main">
+          <div class="yui-b" dir="ltr">
+            <div class="context-publication">
+              <h1>How MadGraph assigns the order (QED/QCD/...) automatically?</h1>
+              
+
+              <div id="registration" class="registering">
+                
+      Created by <a href="https://launchpad.net/~olivier-mattelaer" class="sprite person">Olivier Mattelaer</a>
+      on
+      <span title="2012-04-20 18:52:58 UTC">on 2012-04-20</span>
+    
+              </div>
+            </div>
+
+            
+            <div id="request-notifications">
+              
+            </div>
+
+            
+              <div>
+      <div class="top-portlet">
+        <dl id="faq-keywords">
+          <dt>Keywords:</dt>
+          <dd>order QCD QED</dd>
+        </dl>
+
+        
+          <dl id="faq-updated" style="clear: both">
+            <dt>Last updated by:</dt>
+            <dd>
+              <a href="https://launchpad.net/~johan-alwall" class="sprite person">Johan Alwall</a>
+              on
+             <span title="2012-06-25 02:08:18 UTC">on 2012-06-25</span>
+            </dd>
+          </dl>
+        
+      </div>
+
+
+    <div id="faq-content" class="portlet"><p>(receive from email from Josh McFayden)</p>
+<p>We were wondering if you could clarify a point for us regarding how different processes that contribute to the same final state are selected in madgraph.</p>
+<p>For example when generating p p &gt; W b b~ j j we do not see any diagrams containing t t~ even though both the t t~ and W+jets processes can have this same final state.</p>
+<p>Given that no restrictions are applied to the numbers of QCD and QED couplings how does madgraph choose which diagrams to generate which to omit?</p>
+<p>Thanks in advance,</p>
+<p>Josh and Kerim.</p>
+<p>*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*<br />
+ANSWER:<br />
+*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*******<wbr />*<br />
+Hi Josh, Kerim,</p>
+<p>Let me first explain for the Standard Model / MSSM and after that I will explain how this is extended to any BSM theories.</p>
+<p>So the rule for the SM/MSSM is in fact very simple, we take the order having the LOWEST QED order resulting to a non zero contribution. The motivation for such a rule (besides the fact that, in general, the QED part is sub-dominant) is for the matching procedure (for multijet production) where it&#x27;s important that the multijet part is ONLY QCD.</p>
+<p>In order to generalize the idea to have only the main contribution by default.<br />
+We use a functionality of the UFO assigning to each order a weight<br />
+(you can see those in MG5 by doing<br />
+display couplings_order)<br />
+mg5&gt;display coupling_order<br />
+&nbsp;QCD : weight = 1<br />
+&nbsp;QED : weight = 2</p>
+<p>Then we try to guess what is the minimal weight for a given process<br />
+(WEIGHT= NB_QCD *1 + NB_QED *2)<br />
+For example:<br />
+mg5&gt;generate p p &gt; W+ b b~ j j<br />
+INFO: Checking for minimal orders which gives processes.<br />
+INFO: Please specify coupling orders to bypass this step.<br />
+INFO: Trying coupling order WEIGHTED=6<br />
+Most of the time we guess it correctly, but sometimes we will need to increase the value of the weight by one or two in order to have some diagrams.</p>
+<p>By using those weights, the model builder can specify an ordering between the couplings.<br />
+Of course such default is not always the best one (you can kill your signal in such case) but this is very useful in general.</p></div>
+    </div>
+            
+            
+          </div><!-- yui-b -->
+        </div><!-- yui-main -->
+
+        
+          <div id="side-portlets" class="yui-b side">
+            
+      <div id="global-actions" class="portlet vertical">
+  <ul>
+    <li>
+      <a href="https://answers.launchpad.net/mg5amcnlo/+faqs"
+        class="menu-link-list_all sprite info">List all FAQs</a>
+    </li>
+  </ul>
+</div>
+
+      <div class="portlet" id="portlet-related-questions">
+
+    <h2>Related questions</h2>
+      <ul>
+        <li class="question-row">
+          
+          <a class="sprite question"
+             href="/mg5amcnlo/+question/194238"
+             title="(receive from email from Josh McFayden)
+
+We were wondering if you could clarify a point for us re...">#194238 HOw MadGraph assigns the order (QED/QCD/...) automatically?</a>
+        </li>
+        <li class="question-row">
+          
+          <a class="sprite question"
+             href="/mg5amcnlo/+question/234514"
+             title="When I do
+
+mg5&gt;generate p p &gt; w+ w+ p p QED=4, w+ &gt; e+ ve;
+mg5&gt;add process p p &gt; w- w- p p QED=4,...">#234514 same sign vector boson scattering</a>
+        </li>
+        <li class="question-row">
+          
+          <a class="sprite question"
+             href="/mg5amcnlo/+question/234568"
+             title="Hi,
+
+Can someone explain why we specify a minimum QCD and a maximum QED order in madgraph?
+
+Thank...">#234568 QCD and QED orders</a>
+        </li>
+        <li class="question-row">
+          
+          <a class="sprite question"
+             href="/mg5amcnlo/+question/268601"
+             title="Greetings,
+
+I defined a new model in FeynRules - very short, just a piece of Lagrangian of two te...">#268601 MadGraph adds new model but does not use new vertices</a>
+        </li>
+        <li class="question-row">
+          
+          <a class="sprite question"
+             href="/mg5amcnlo/+question/293872"
+             title="What is unweighted and weighted QED in druglikeliness?">#293872 What is weighted and unweighted QED</a>
+        </li>
+        <li class="question-row">
+          
+          <a class="sprite question"
+             href="/mg5amcnlo/+question/438455"
+             title="Hello,
+
+I've created a model of scalar electrodynamics in FeynRules and imported it in MG.
+It see...">#438455 New model works but doesn't use four-vertices</a>
+        </li>
+      </ul>
+</div>
+
+    
+          </div><!-- yui-b side -->
+        
+      </div><!-- yui-t4 -->
+
+      
+  <div id="footer" class="footer">
+    <div class="lp-arcana">
+        <div class="lp-branding">
+          <a href="https://launchpad.net/"><img src="/@@/launchpad-logo-and-name-hierarchy.png" alt="Launchpad" /></a>
+          &nbsp;&bull;&nbsp;
+          <a href="https://launchpad.net/+tour">Take the tour</a>
+          &nbsp;&bull;&nbsp;
+          <a href="https://help.launchpad.net/">Read the guide</a>
+          &nbsp;
+          <form id="globalsearch" method="get"
+                accept-charset="UTF-8"
+                action="https://launchpad.net/+search">
+            <input type="search" id="search-text" name="field.text" />
+            <input type="image" src="/@@/search" style="vertical-align:5%" alt="Search Launchpad" />
+          </form>
+        </div>
+        
+  
+
+    </div>
+
+    <div class="colophon">
+      &copy; 2004-2017
+      <a href="http://canonical.com/">Canonical&nbsp;Ltd.</a>
+      &nbsp;&bull;&nbsp;
+      <a href="https://launchpad.net/legal">Terms of use</a>
+      &nbsp;&bull;&nbsp;
+      <a href="/feedback">Contact Launchpad Support</a>
+      
+      &nbsp;&bull;&nbsp;
+      <a href="http://blog.launchpad.net/">Blog</a>
+      
+	&nbsp;&bull;&nbsp;
+	<a href="http://www.canonical.com/about-canonical/careers">Careers</a>
+      
+      &nbsp;&bull;&nbsp;
+      <a href="https://twitter.com/launchpadstatus">System status</a>
+      <span id="lp-version">
+      &nbsp;&bull;&nbsp;
+        r18449
+        
+        
+        (<a href="https://dev.launchpad.net/">Get the code!</a>)
+      </span>
+    </div>
+  </div>
+
+    </div><!-- yui-d0-->
+
+    
+  
+  
+  <script id="json-cache-script">LP.cache = {"related_features": {}, "context": {"date_last_updated": "2012-06-25T02:08:18.155028+00:00", "title": "How MadGraph assigns the order (QED/QCD/...) automatically?", "http_etag": "\"6f4ce10afc06987aad2ce3ea05bee608890fb5f8-fba4ef10a007737a4617eafd617057045f1515b2\"", "web_link": "https://answers.launchpad.net/mg5amcnlo/+faq/1942", "content": "(receive from email from Josh McFayden)\n\nWe were wondering if you could clarify a point for us regarding how different processes that contribute to the same final state are selected in madgraph.\n\nFor example when generating p p \u003e W b b~ j j we do not see any diagrams containing t t~ even though both the t t~ and W+jets processes can have this same final state.\n\nGiven that no restrictions are applied to the numbers of QCD and QED couplings how does madgraph choose which diagrams to generate which to omit?\n\nThanks in advance,\n\nJosh and Kerim.\n\n************************************************************************************************************************\nANSWER: \n************************************************************************************************************************\nHi Josh, Kerim,\n\nLet me first explain for the Standard Model / MSSM and after that I will explain how this is extended to any BSM theories.\n\nSo the rule for the SM/MSSM is in fact very simple, we take the order having the LOWEST QED order resulting to a non zero contribution. The motivation for such a rule (besides the fact that, in general, the QED part is sub-dominant) is for the matching procedure (for multijet production) where it's important that the multijet part is ONLY QCD.\n\nIn order to generalize the idea to have only the main contribution by default.\nWe use a functionality of the UFO assigning to each order a weight\n(you can see those in MG5 by doing\ndisplay couplings_order)\nmg5\u003edisplay coupling_order\n QCD : weight = 1\n QED : weight = 2\n\nThen we try to guess what is the minimal weight for a given process\n(WEIGHT= NB_QCD *1 + NB_QED *2)\nFor example:\nmg5\u003egenerate p p \u003e W+ b b~ j j\nINFO: Checking for minimal orders which gives processes.\nINFO: Please specify coupling orders to bypass this step.\nINFO: Trying coupling order WEIGHTED=6\nMost of the time we guess it correctly, but sometimes we will need to increase the value of the weight by one or two in order to have some diagrams.\n\nBy using those weights, the model builder can specify an ordering between the couplings.\nOf course such default is not always the best one (you can kill your signal in such case) but this is very useful in general.\n\n\n\n\n", "keywords": "order QCD QED", "last_updated_by_link": "https://answers.launchpad.net/api/devel/~johan-alwall", "target_link": "https://answers.launchpad.net/api/devel/mg5amcnlo", "self_link": "https://answers.launchpad.net/api/devel/mg5amcnlo/+faq/1942", "date_created": "2012-04-20T18:52:58.880371+00:00", "resource_type_link": "https://answers.launchpad.net/api/devel/#faq", "id": 1942}};</script>
+
+    
+  
+
+    
+  </body>
+
+
+  <!--
+    Facet name: answers
+    Page type: main_side
+    Has global search: True
+    Has application tabs: True
+    Has side portlets: True
+
+    At least 15 queries/external actions issued in 0.18 seconds
+
+    Features: {'app.mainsite_only.canonical_url': None, 'baselayout.careers_link.disabled': None, 'hard_timeout': u'5000', 'profiling.enabled': None, 'js.yui_version': None, 'visible_render_time': None}
+
+    r18449
+
+    -->
+
+</html>
+
+
