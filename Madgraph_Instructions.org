@@ -1,0 +1,77 @@
+* Download Madgraph
+curl -O https://launchpadlibrarian.net/333511848/MG5_aMC_v2.6.0.tar.gz
+tar xzf MG5_aMC_v2.6.0.tar.gz
+cd MG5_aMC_v2_6_0
+
+* Important files/directories
+** bin/mg5_aMC
+File to run madgraph
+Allows for connecting different programs such as Pythia, Delphes, Root, MadAnalysis, lhapdf, etc
+(check these by tab completing the `install` function)
+When in doubt, tab complete
+** models/
+Specifies the different models.  In UFO format.
+To use a specific model, just type:
+$ import <folder>
+where <folder> is the name of the folder in the model directory
+** <RUN NAME>/Cards/param_card.txt
+File specifies actual particle information, such as mass, mixing matrix, etc
+More important for changing mass in BSM model
+** <RUN NAME>/Cards/run_card.txt
+File gives specifications for the run conditions
+Run conditions like detector specifics (polarized beam, energy, etc)
+Lots of parameters for reducing computing time as well
+
+* How to run
++ generate - for first, main process
++ add process - for any additional process
++ define - give shorthand for different particles
++ output - set up run directory
++ launch - run madgraph for your event
+
+Example program (for Drell-Yan over lepton Events)
+`
+generate p p > l+ l-
+add process p p > ta+ ta-
+output DY_LL
+launch DY_LL
+`
+
+Program has tools for further specifying event. 
++ If there are intermediate particles, they are assumed to be onmass shell
+ie `generate p p > z > l+ l-` will clean up the dilepton mass since no more virtual z contributions
++ Exclude particle from diagrams with '/'
+ie `generate p p > l+ l- / a' excludes virtual photon contributions
++ Exclude particle specifically from s-channel by '$'
+ie `generate p p > l+ l- $a` (should be the same as before since s-channel anyway)
+
+NOTE: MadGraph is only a leading order (aMC is supposed to give NLO calculation ability), so there 
+is a hard restriction on the QCD and QED/EWK couplings allowed, namely the QED/EWK coupling is minimized
+QCD may be in some range, usually to keep the overall number of couplings less than 6.  
+This can be altered by specifying the QCD or QED coupling explicitly
+ie `generate p p > j j QCD=0` would restrict to only EWK interaction.
+For more info on the weight, look here: https://answers.launchpad.net/mg5amcnlo/+faq/1942
+
++ more information here http://www.niu.edu/spmartin/madgraph/madsyntax.html
+
+* First Run
+All of the events are displayed in a webpage called `crossx.html` in your working directory
+
++ HTML/ - holds the web files with more information about the event
++ Cards - holds config cards
++ Events - has the different runs in the specific run folder. Output is in LHE format.
+
+** View Results
+$ install MadAnalysis
+madanalysis is its own beast, but tab complete is your friend
+
++ plot - plot value
++ display multiparticle - give all particles
++ import - link LHE file to event (can use wildcards)
++ submit - output event to folder and run
++ open - open results
+
+mad analysis gives output in ROOT format, but can be displayed in web browser
+
++ full documentation here https://arxiv.org/abs/1206.1599
+
